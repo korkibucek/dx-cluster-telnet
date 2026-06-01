@@ -1,0 +1,13 @@
+services:
+  rbn-dxcluster:
+    build: .
+    container_name: rbn-dxcluster
+    restart: unless-stopped
+    ports:
+      - "7373:7373"
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./config/config.example.yaml:/app/config/config.example.yaml:ro
+      - rbn-data:/app/data
+volumes:
+  rbn-data:

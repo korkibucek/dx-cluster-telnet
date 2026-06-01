@@ -1,0 +1,59 @@
+server:
+  listen_host: 0.0.0.0
+  listen_port: 7373
+  banner: "Welcome to rbn-dxcluster - aggregated RBN and DX Cluster spots"
+  max_clients: 100
+  idle_timeout_seconds: 1800
+  client_queue_size: 1000
+
+database:
+  url: sqlite:///data/rbn-dxcluster.sqlite3
+
+upstreams:
+  rbn_cw_rtty:
+    enabled: true
+    strategy: active_active
+    max_feeds: 10
+    endpoints:
+      - name: rbn-main
+        host: telnet.reversebeacon.net
+        port: 7000
+        timeout_seconds: 30
+        max_messages_per_minute: 12000
+  rbn_ft8:
+    enabled: true
+    strategy: active_active
+    max_feeds: 10
+    endpoints:
+      - name: rbn-ft8-main
+        host: telnet.reversebeacon.net
+        port: 7001
+        timeout_seconds: 30
+        max_messages_per_minute: 12000
+  classic_cluster:
+    enabled: false
+    strategy: active_active
+    max_feeds: 10
+    endpoints:
+      - name: cluster-example
+        host: dx.example.net
+        port: 7300
+        enabled: false
+
+filters:
+  global: {}
+
+dedupe:
+  enabled: true
+  window_seconds: 60
+  frequency_tolerance_khz: 0.5
+
+logging:
+  level: INFO
+
+admin:
+  enabled: true
+  listen_host: 127.0.0.1
+  listen_port: 8080
+  # Set auth_token to require Bearer/X-Admin-Token auth for mutating admin actions.
+  auth_token: null
